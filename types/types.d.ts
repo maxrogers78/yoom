@@ -34,3 +34,7 @@ declare interface MeetingModalProps {
   children?: React.ReactNode;
   className?: React.HTMLProps<HTMLElement>['className'];
 }
+
+declare interface MeetingSetupProps {
+  setIsSetupCompleted: (value: boolean) => void;
+}

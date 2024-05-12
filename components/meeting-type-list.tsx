@@ -3,6 +3,9 @@ import { useState } from 'react';
 import HomeCard from './home-card';
 import { useRouter } from 'next/navigation';
 import MeetingModal from './meeting-modal';
+import { useUser } from '@clerk/nextjs';
+import { Call, useStreamVideoClient } from '@stream-io/video-react-sdk';
+import { useToast } from './ui/use-toast';
 
 type MeetingState =
   | 'isScheduleMeeting'
@@ -10,12 +13,65 @@ type MeetingState =
   | 'isInstantMeeting'
   | undefined;
 
+interface Values {
+  dateTime: Date;
+  description: string;
+  link: string;
+}
+
+const VALUES_INITIAL_STATE: Values = {
+  dateTime: new Date(),
+  description: '',
+  link: '',
+};
+
 export default function MeetingTypeList() {
   const router = useRouter();
-  const [meetingState, setMeetingState] = useState<MeetingState>();
+  const { user } = useUser();
+  const client = useStreamVideoClient();
+  const { toast } = useToast();
 
-  const createMeeting = () => {
-    console.log(3);
+  const [meetingState, setMeetingState] = useState<MeetingState>();
+  const [values, setValues] = useState<Values>(VALUES_INITIAL_STATE);
+  const [callDetails, setCallDetails] = useState<Call>();
+
+  const createMeeting = async () => {
+    if (!client || !user) return;
+
+    try {
+      if (!values.dateTime)
+        return toast({
+          title: "Can't create a new meeting",
+          description: 'Please select a date and a time',
+        });
+
+      const id = crypto.randomUUID();
+      const call = client.call('default', id);
+
+      if (!call) throw new Error('Failed to create call');
+
+      const startsAt =
+        values.dateTime.toISOString() || new Date(Date.now()).toISOString();
+      const description = values.description || 'Instant meeting';
+
+      await call.getOrCreate({
+        data: {
+          starts_at: startsAt,
+          custom: {
+            description,
+          },
+        },
+      });
+
+      setCallDetails(call);
+
+      if (!values.description) router.push(`/meeting/${call.id}`);
+
+      toast({ title: 'Meeting created' });
+    } catch (error) {
+      console.log(error);
+      toast({ title: 'Failed to create meeting' });
+    }
   };
 
   return (

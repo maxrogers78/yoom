@@ -83,6 +83,15 @@
   .flex-between {
     @apply flex items-center justify-between;
   }
+
+  @keyframes spin-reverse {
+    to {
+      transform: rotate(-360deg);
+    }
+  }
+  .animate-spin-reverse {
+    animation: spin-reverse 1s linear infinite;
+  }
 }
 
 /* ======== stream css overrides ======== */

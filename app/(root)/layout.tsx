@@ -1,7 +1,13 @@
+import StreamClientProvider from '@/providers/StreamClientProvider';
+
 export default function RootLayout({
-  children
+  children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return <main>{children}</main>;
+  return (
+    <main>
+      <StreamClientProvider>{children}</StreamClientProvider>
+    </main>
+  );
 }
