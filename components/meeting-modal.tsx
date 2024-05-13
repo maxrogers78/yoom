@@ -1,12 +1,5 @@
 'use client';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog';
+import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
 import { Button } from './ui/button';
@@ -32,7 +25,12 @@ export default function MeetingModal({
             </div>
           )}
 
-          <h1 className={cn('text-3xl font-bold leading-[42px]', className)}>
+          <h1
+            className={cn(
+              'text-center text-3xl font-bold leading-[42px]',
+              className,
+            )}
+          >
             {title}
           </h1>
 
