@@ -10,7 +10,10 @@ const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: 'Yoom',
-  description: 'Zoom clone built with Next.js',
+  description: 'Video calling app',
+  icons: {
+    icon: '/icons/logo.svg',
+  },
 };
 
 export default function AppLayout({
